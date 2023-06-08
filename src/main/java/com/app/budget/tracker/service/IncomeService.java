@@ -1,9 +1,8 @@
 package com.app.budget.tracker.service;
 
-import com.app.budget.tracker.model.Income;
+import com.app.budget.tracker.model.IncomeDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 @Service
 public class IncomeService {
@@ -11,12 +10,12 @@ public class IncomeService {
     public IncomeService() {
     }
 
-    public Income findIncome(){
+    public IncomeDTO findIncome(){
         //nezinau ar reikalingas sitas
         return null;
     }
 
-    public void saveIncome(Income income) {
+    public void saveIncome(IncomeDTO incomeDTO) {
         //seivins repositorijoje, nereikia nieko grazint
     }
 
@@ -24,7 +23,7 @@ public class IncomeService {
 
     }
 
-    public Income getIncome(UUID id){
+    public IncomeDTO getIncome(UUID id){
         return null;
     }
 

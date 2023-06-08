@@ -2,20 +2,20 @@ package com.app.budget.tracker.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
-public class Income {
 
-    private UUID id; //ar makes sense?
+public class IncomeDTO {
+
+    private Long id;
     private String category;
     private BigDecimal amount;
     private LocalDate recordDate;
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -24,7 +24,7 @@ public class Income {
     }
 
     public void setCategory(String category) {
-        this.category = category; //kaip cia dabar su ta kategorija
+        this.category = category; //kategorija nusetinam kontroleryje?
     }
 
     public BigDecimal getAmount() {

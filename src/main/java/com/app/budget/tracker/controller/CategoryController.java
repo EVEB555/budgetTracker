@@ -18,9 +18,9 @@ public class CategoryController {
 
     @PostMapping
     public void createCategory(@RequestParam(name = "description") String description){
-        Category item = new Category();
-        item.setDescription(description);
-        repository.save(item);
+        Category category = new Category();
+        category.setDescription(description);
+        repository.save(category);
 
     }
 
