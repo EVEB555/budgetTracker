@@ -4,58 +4,34 @@ package com.app.budget.tracker.controller;
 import com.app.budget.tracker.entity.Income;
 import com.app.budget.tracker.model.IncomeDTO;
 import com.app.budget.tracker.repository.IncomeRepository;
-import org.springframework.stereotype.Controller;
+import com.app.budget.tracker.service.IncomeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping
+@RestController
+@RequestMapping("/incomes")
 public class IncomeController {
 
-    private final IncomeRepository repository;
+    private final IncomeService service;
 
-    public IncomeController(IncomeRepository repository) {
-        this.repository = repository;
+    public IncomeController(IncomeService service) {
+        this.service = service;
     }
 
     @PostMapping
     public void addIncomeItem(String category, BigDecimal amount){
-        Income income = new Income();
-        income.setCategory(category);
-        income.setAmount(amount);
-        LocalDate currentDate = LocalDate.now();
-        income.setRecordDate(currentDate);
-        //kaip su category?
-        repository.save(income);
+        service.addIncomeItem(category, amount);
     }
 
     @GetMapping
     public List<IncomeDTO> getAllIncomeItems(){
-        List<Income> incomeList = repository.findAll();
-        //var incomeList = repository.findAll();
-        /*List<IncomeDTO> result = new ArrayList<>();
-        for(Income income : all) {
-            IncomeDTO item = new IncomeDTO();
-            item.setId(income.getId());
-            item.setCategory(income.getCategory());
-            item.setAmount(income.getAmount());
-            result.add(item);
-        }*/
-
-        return incomeList.stream().map(income -> {
-            IncomeDTO item = new IncomeDTO();
-            item.setId(income.getId());
-            item.setCategory(income.getCategory());
-            item.setAmount(income.getAmount());
-            return item;
-        }).toList();
+        return service.getAllIncomeItems();
     }
 
     String editIncome(){

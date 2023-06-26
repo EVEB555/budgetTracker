@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-//Ar identiskais model IncomeDTO?
 @Entity
 public class Income {
     @Id
