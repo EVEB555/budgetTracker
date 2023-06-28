@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="evelina" id="1">
-        <createTable tableName="incomeDTO">
+        <createTable tableName="income">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
@@ -16,12 +16,12 @@
             <column name="amount" type="DECIMAL">
                 <constraints nullable="false"/>
             </column>
-            <column name="recorddate" type="DATE">
+            <column name="record_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <rollback>
-            <dropTable tableName="incomeDTO"/>
+            <dropTable tableName="income"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>
