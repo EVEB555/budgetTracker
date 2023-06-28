@@ -24,7 +24,7 @@ public class IncomeDTO {
     }
 
     public void setCategory(String category) {
-        this.category = category; //kategorija nusetinam kontroleryje?
+        this.category = category;
     }
 
     public BigDecimal getAmount() {

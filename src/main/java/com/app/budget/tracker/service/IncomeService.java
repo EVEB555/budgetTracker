@@ -4,6 +4,7 @@ package com.app.budget.tracker.service;
 import com.app.budget.tracker.entity.Income;
 import com.app.budget.tracker.model.IncomeDTO;
 import com.app.budget.tracker.repository.IncomeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

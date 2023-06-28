@@ -20,7 +20,6 @@ public class CategoryController {
     @PostMapping
     public void createCategory(@RequestParam(name = "description") String description){
         service.createCategory(description);
-
     }
 
     @GetMapping

@@ -5,6 +5,8 @@ import com.app.budget.tracker.entity.Income;
 import com.app.budget.tracker.model.IncomeDTO;
 import com.app.budget.tracker.repository.IncomeRepository;
 import com.app.budget.tracker.service.IncomeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -2,6 +2,8 @@ package com.app.budget.tracker.service;
 
 import com.app.budget.tracker.entity.Category;
 import com.app.budget.tracker.repository.CategoryRepository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
