@@ -3,23 +3,22 @@ package com.app.budget.tracker.service;
 
 import com.app.budget.tracker.entity.Income;
 import com.app.budget.tracker.model.IncomeDTO;
+import com.app.budget.tracker.repository.CategoryRepository;
 import com.app.budget.tracker.repository.IncomeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class IncomeService {
 
     private final IncomeRepository repository;
+
 
     public IncomeService(IncomeRepository repository) {
         this.repository = repository;
@@ -33,6 +32,8 @@ public class IncomeService {
         income.setRecordDate(currentDate);
         repository.save(income);
     }
+
+
 
     public List<IncomeDTO> getAllIncomeItems(){
         List<Income> incomeList = repository.findAll();

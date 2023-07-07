@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +21,12 @@ public class Income {
     private String category;
     private BigDecimal amount;
     private LocalDate recordDate;
+
+    /*public Income(String category, BigDecimal amount) {
+        this.category = category;
+        this.amount = amount;
+    }*/
+
 
     public Long getId() {
         return id;
