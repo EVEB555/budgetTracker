@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.app.budget.tracker.entity.Category;
 import com.app.budget.tracker.entity.Income;
 import com.app.budget.tracker.model.IncomeDTO;
+import com.app.budget.tracker.repository.CategoryRepository;
 import com.app.budget.tracker.repository.IncomeRepository;
+import com.app.budget.tracker.service.CategoryService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -38,18 +40,27 @@ class IncomeControllerTest {
     private IncomeRepository repository;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     ObjectMapper mapper;
 
     @Test
     void addIncomeItem() throws Exception {
         Income income = new Income();
-        income.setCategory("Salary");
+        Category category = new Category();
+        category.setDescription("Salary");
+        //categoryRepository.save(category);
+       // categoryService.createCategory(category.getDescription());
+        income.setCategory(category.getDescription());
         income.setAmount(new BigDecimal(1000));
         income.setRecordDate(LocalDate.now());
         repository.save(income);
         //System.out.println(income);
 
-       /* MvcResult result = this.mockMvc.perform(post("/incomes"))
+       MvcResult result = this.mockMvc.perform(post("/incomes"))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
@@ -57,8 +68,9 @@ class IncomeControllerTest {
 
         List<Income> actual = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Income>>() {});
 
-        assertEquals(1, actual.size());*/
+        assertEquals(1, actual.size());
 
+        categoryRepository.deleteAll();
         repository.deleteAll();
 
     }

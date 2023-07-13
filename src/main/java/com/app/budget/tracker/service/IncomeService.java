@@ -1,6 +1,7 @@
 package com.app.budget.tracker.service;
 
 
+import com.app.budget.tracker.entity.Category;
 import com.app.budget.tracker.entity.Income;
 import com.app.budget.tracker.model.IncomeDTO;
 import com.app.budget.tracker.repository.CategoryRepository;
@@ -19,20 +20,32 @@ public class IncomeService {
 
     private final IncomeRepository repository;
 
+    private final CategoryService categoryService;
 
-    public IncomeService(IncomeRepository repository) {
+    private final CategoryRepository categoryRepository;
+
+    public IncomeService(IncomeRepository repository, CategoryService categoryService, CategoryRepository categoryRepository) {
         this.repository = repository;
+        this.categoryService = categoryService;
+        this.categoryRepository = categoryRepository;
     }
 
-    public void addIncomeItem(String category, BigDecimal amount){
+    public void addIncomeItem(String category, BigDecimal amount) {
         Income income = new Income();
-        income.setCategory(category);
+        Category existingCategory = categoryRepository.findByDescription(category);
+
+        if (existingCategory != null && existingCategory.getDescription().equals(category)) {
+            income.setCategory(existingCategory.getDescription());
+        } else {
+            categoryService.createCategory(category);
+            income.setCategory(category);
+        }
+
         income.setAmount(amount);
         LocalDate currentDate = LocalDate.now();
         income.setRecordDate(currentDate);
         repository.save(income);
     }
-
 
 
     public List<IncomeDTO> getAllIncomeItems(){
