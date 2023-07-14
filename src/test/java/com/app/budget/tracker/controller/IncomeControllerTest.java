@@ -52,35 +52,41 @@ class IncomeControllerTest {
         Income income = new Income();
         Category category = new Category();
         category.setDescription("Salary");
-        //categoryRepository.save(category);
-       // categoryService.createCategory(category.getDescription());
-        income.setCategory(category.getDescription());
+//        category = categoryRepository.save(category);
+        // categoryService.createCategory(category.getDescription());
+        income.setCategory(category);
         income.setAmount(new BigDecimal(1000));
         income.setRecordDate(LocalDate.now());
-        repository.save(income);
+        income = repository.save(income); //not used?
         //System.out.println(income);
 
-       MvcResult result = this.mockMvc.perform(post("/incomes"))
+
+        MvcResult result = mockMvc.perform(
+                        post("/incomes")
+                                .param("category", "Gift")
+                                .param("amount", "10"))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
                 .andReturn();
 
-        List<Income> actual = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Income>>() {});
+        List<Income> incomes = repository.findAll();
 
-        assertEquals(1, actual.size());
+        assertEquals(2, incomes.size());
 
-        categoryRepository.deleteAll();
         repository.deleteAll();
-
     }
+
 
     @Test
     void getAllIncomeItems() throws Exception {
         //creates fake Object
+        var fakeCategory = new Category();
+        fakeCategory.setDescription("Gift");
+
         Income income = new Income();
         income.setAmount(new BigDecimal(10));
-        income.setCategory("Gift");
+        income.setCategory(fakeCategory);
         income.setRecordDate(LocalDate.now());
         repository.save(income);
 
@@ -91,7 +97,7 @@ class IncomeControllerTest {
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
-                        .andReturn();
+                .andReturn();
 
 
         // This code deserializes the JSON response content from result into a List<IncomeDTO> object using an object mapper,
@@ -104,7 +110,6 @@ class IncomeControllerTest {
 
         repository.deleteAll();
     }
-
     @Test
     void editIncome() {
     }

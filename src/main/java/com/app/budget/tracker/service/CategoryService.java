@@ -16,11 +16,11 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public void createCategory(String description){
+
+    public Category createCategory(String description){
         Category category = new Category();
         category.setDescription(description);
-        repository.save(category);
-
+        return repository.save(category);
     }
 
     public List<Category> getAllCategories (){

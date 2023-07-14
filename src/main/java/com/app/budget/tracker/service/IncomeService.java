@@ -3,6 +3,7 @@ package com.app.budget.tracker.service;
 
 import com.app.budget.tracker.entity.Category;
 import com.app.budget.tracker.entity.Income;
+import com.app.budget.tracker.model.CategoryDTO;
 import com.app.budget.tracker.model.IncomeDTO;
 import com.app.budget.tracker.repository.CategoryRepository;
 import com.app.budget.tracker.repository.IncomeRepository;
@@ -35,10 +36,10 @@ public class IncomeService {
         Category existingCategory = categoryRepository.findByDescription(category);
 
         if (existingCategory != null && existingCategory.getDescription().equals(category)) {
-            income.setCategory(existingCategory.getDescription());
+            income.setCategory(existingCategory);
         } else {
-            categoryService.createCategory(category);
-            income.setCategory(category);
+            var createdCategory = categoryService.createCategory(category);
+            income.setCategory(createdCategory);
         }
 
         income.setAmount(amount);
@@ -61,13 +62,16 @@ public class IncomeService {
         }*/
 
         return incomeList.stream().map(income -> {
+            var categoryDTO = new CategoryDTO();
+            categoryDTO.setId(income.getCategory().getId());
+            categoryDTO.setDescription(income.getCategory().getDescription());
+
             IncomeDTO item = new IncomeDTO();
             item.setId(income.getId());
-            item.setCategory(income.getCategory());
+            item.setCategory(categoryDTO);
             item.setAmount(income.getAmount());
             item.setRecordDate(income.getRecordDate());
             return item;
         }).toList();
     }
-
 }

@@ -10,8 +10,8 @@
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="category" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="category_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_category_category_id"/>
             </column>
             <column name="amount" type="DECIMAL">
                 <constraints nullable="false"/>

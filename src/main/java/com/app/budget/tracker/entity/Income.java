@@ -18,7 +18,9 @@ public class Income {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String category;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="category_id", nullable=false)
+    private Category category;
     private BigDecimal amount;
     private LocalDate recordDate;
 
@@ -36,11 +38,11 @@ public class Income {
         this.id = id;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category; //kategorija nusetinam kontroleryje?
     }
 

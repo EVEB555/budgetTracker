@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class IncomeDTO {
 
     private Long id;
-    private String category;
+    private CategoryDTO category;
     private BigDecimal amount;
     private LocalDate recordDate;
 
@@ -19,11 +19,11 @@ public class IncomeDTO {
         this.id = id;
     }
 
-    public String getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 
