@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -60,11 +61,12 @@ class IncomeControllerTest {
         income = repository.save(income); //not used?
         //System.out.println(income);
 
+        CreateIncomeRequest request = new CreateIncomeRequest("Gift", new BigDecimal(100));
 
         MvcResult result = mockMvc.perform(
-                        post("/incomes")
-                                .param("category", "Gift")
-                                .param("amount", "10"))
+                        post("/incomes").contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request)))
+
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
