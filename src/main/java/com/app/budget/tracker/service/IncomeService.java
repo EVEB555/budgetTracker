@@ -7,6 +7,7 @@ import com.app.budget.tracker.model.CategoryDTO;
 import com.app.budget.tracker.model.IncomeDTO;
 import com.app.budget.tracker.repository.CategoryRepository;
 import com.app.budget.tracker.repository.IncomeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +74,28 @@ public class IncomeService {
             item.setRecordDate(income.getRecordDate());
             return item;
         }).toList();
+    }
+
+    public void editIncome(Long incomeId, String category, BigDecimal amount) {
+        //Income income = repository.findById(incomeId);
+
+        Income income = repository.findById(incomeId)
+                .orElseThrow(() -> new EntityNotFoundException("Income item not found with id: " + incomeId));
+
+       /* if (income == null) {
+            throw new EntityNotFoundException("Income item not found with id: " + incomeId);
+        }*/
+
+        Category existingCategory = categoryRepository.findByDescription(category);
+
+        if (existingCategory != null && existingCategory.getDescription().equals(category)) {
+            income.setCategory(existingCategory);
+        } else {
+            var createdCategory = categoryService.createCategory(category);
+            income.setCategory(createdCategory);
+        }
+
+        income.setAmount(amount);
+        repository.save(income);
     }
 }

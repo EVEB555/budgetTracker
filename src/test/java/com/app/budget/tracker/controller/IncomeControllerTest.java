@@ -1,6 +1,5 @@
 package com.app.budget.tracker.controller;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,6 +12,7 @@ import com.app.budget.tracker.repository.IncomeRepository;
 import com.app.budget.tracker.service.CategoryService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -112,8 +112,45 @@ class IncomeControllerTest {
 
         repository.deleteAll();
     }
-    @Test
+   /* @Test
     void editIncome() {
+    }*/
+
+
+    @Test
+    void editIncome() throws Exception {
+        // Create a fake income item for editing
+        Income fakeIncome = new Income();
+        var fakeCategory = new Category();
+        fakeCategory.setDescription("Gift");
+        fakeIncome.setCategory(fakeCategory);
+        fakeIncome.setAmount(new BigDecimal(100));
+        fakeIncome.setRecordDate(LocalDate.now());
+        repository.save(fakeIncome);
+
+        //Create a request to edit the income item
+        EditIncomeRequest editRequest = new EditIncomeRequest("Updated Gift", new BigDecimal(200));
+
+        //Get the ID of the fake income item
+        List<Income> incomes = repository.findAll();
+        Long incomeId = incomes.get(0).getId(); // Change this to get the ID of the fake income
+
+        //Perform the edit operation
+        MvcResult result = mockMvc.perform(
+                        put("/incomes/{incomeId}", incomeId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(editRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //Verify that the income item has been edited
+        Income editedIncome = repository.findById(incomeId).orElse(null);
+        assertNotNull(editedIncome);
+        assertEquals("Updated Gift", editedIncome.getCategory().getDescription());
+        assertEquals(new BigDecimal(200), editedIncome.getAmount());
+
+        repository.deleteAll();
     }
 
     @Test

@@ -34,8 +34,10 @@ public class IncomeController {
         return service.getAllIncomeItems();
     }
 
-    String editIncome(){
-        return "";
+
+    @PutMapping("/{incomeId}")
+    public void editIncome(@PathVariable Long incomeId, @RequestBody EditIncomeRequest request) {
+        service.editIncome(incomeId, request.getCategory(), request.getAmount());
     }
 
     String deleteIncome(){
