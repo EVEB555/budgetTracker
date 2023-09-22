@@ -98,4 +98,13 @@ public class IncomeService {
         income.setAmount(amount);
         repository.save(income);
     }
+
+    public void deleteIncome(Long incomeId) {
+        // check if the income item exists
+        Income income = repository.findById(incomeId)
+                .orElseThrow(() -> new EntityNotFoundException("Income item not found with id: " + incomeId));
+
+        // Delete the income item
+        repository.delete(income);
+    }
 }

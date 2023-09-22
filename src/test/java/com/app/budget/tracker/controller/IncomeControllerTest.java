@@ -112,9 +112,7 @@ class IncomeControllerTest {
 
         repository.deleteAll();
     }
-   /* @Test
-    void editIncome() {
-    }*/
+
 
 
     @Test
@@ -154,6 +152,28 @@ class IncomeControllerTest {
     }
 
     @Test
-    void deleteIncome() {
+    void deleteIncome() throws Exception {
+        // Create a fake income item for deletion
+        Income fakeIncome = new Income();
+        var fakeCategory = new Category();
+        fakeCategory.setDescription("Gift");
+        fakeIncome.setCategory(fakeCategory);
+        fakeIncome.setAmount(new BigDecimal(100));
+        fakeIncome.setRecordDate(LocalDate.now());
+        fakeIncome = repository.save(fakeIncome);
+
+        // Get the ID of the fake income item
+        Long incomeId = fakeIncome.getId();
+
+        // Perform the delete operation
+        mockMvc.perform(
+                        delete("/incomes/{incomeId}", incomeId)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        // Verify that the income item has been deleted
+        assertFalse(repository.existsById(incomeId));
     }
+
 }

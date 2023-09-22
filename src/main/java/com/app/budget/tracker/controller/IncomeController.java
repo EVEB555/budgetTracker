@@ -40,9 +40,12 @@ public class IncomeController {
         service.editIncome(incomeId, request.getCategory(), request.getAmount());
     }
 
-    String deleteIncome(){
-        return "";
+    @DeleteMapping("/{incomeId}")
+    public void deleteIncome(@PathVariable Long incomeId) {
+        service.deleteIncome(incomeId);
     }
+
+
 }
 
 

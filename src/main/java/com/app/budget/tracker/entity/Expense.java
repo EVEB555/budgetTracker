@@ -1,9 +1,6 @@
 package com.app.budget.tracker.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +11,9 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String category;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="category_id", nullable=false)
+    private Category category;
     private BigDecimal amount;
     private LocalDate recordDate;
     private String comment;
@@ -25,10 +24,10 @@ public class Expense {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
     public BigDecimal getAmount() {
