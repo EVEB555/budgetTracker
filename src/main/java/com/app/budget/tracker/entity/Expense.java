@@ -1,15 +1,20 @@
 package com.app.budget.tracker.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "expense")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Expense {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id", nullable=false)
