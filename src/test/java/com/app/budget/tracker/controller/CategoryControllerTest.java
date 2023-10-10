@@ -2,6 +2,7 @@ package com.app.budget.tracker.controller;
 
 import com.app.budget.tracker.entity.Category;
 import com.app.budget.tracker.model.CategoryDTO;
+import com.app.budget.tracker.repository.CategoryRepository;
 import com.app.budget.tracker.service.CategoryService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,120 +25,88 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class CategoryControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper mapper;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private CategoryService categoryService;
-
-   /* @Test
-    void createCategory() throws Exception {
-        String categoryName = "Test Category";
-
-        MvcResult result = mockMvc.perform(
-                        post("/categories")
-                                .param("description", categoryName))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Verify that the category was created
-        CategoryDTO createdCategory = mapper.readValue(result.getResponse().getContentAsString(), CategoryDTO.class);
-        assertNotNull(createdCategory);
-        assertEquals(categoryName, createdCategory.getDescription());
-
-        // Clean up: Delete the created category
-        categoryService.deleteCategory(createdCategory.getId());
-    }*/
+    private ObjectMapper mapper;
 
     @Test
-    void createCategory() throws Exception {
-        String categoryName = "Test Category";
+    void addCategory() throws Exception {
+        CreateCategoryRequest request = new CreateCategoryRequest("Groceries");
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                         post("/categories")
-                                .param("description", categoryName))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(status().isOk());
 
-        // Verify that the response contains the success message as plain text
-        String responseContent = result.getResponse().getContentAsString();
-        assertEquals("Category created successfully", responseContent);
+        List<Category> categories = categoryRepository.findAll();
+        assertEquals(1, categories.size());
+        assertEquals("Groceries", categories.get(0).getDescription());
 
-        // Clean up: Delete the created category
-        // You may need to modify this part based on how you handle category deletion
-        // since the controller method currently does not return the created category ID.
+        categoryRepository.deleteAll();
     }
-
 
     @Test
     void getAllCategories() throws Exception {
-        // Create some test categories
-        categoryService.createCategory("Category 1");
-        categoryService.createCategory("Category 2");
+        Category category = new Category();
+        category.setDescription("Shopping");
+        categoryRepository.save(category);
 
         MvcResult result = mockMvc.perform(get("/categories"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Verify that the response contains a list of categories
-        List<CategoryDTO> categories = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<CategoryDTO>>() {});
-        assertTrue(categories.size() >= 2);
+        List<CategoryDTO> actual = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<CategoryDTO>>() {});
 
-        // Clean up: Delete the test categories
-        for (CategoryDTO category : categories) {
-            categoryService.deleteCategory(category.getId());
-        }
+        assertEquals(1, actual.size());
+        assertEquals("Shopping", actual.get(0).getDescription());
+
+        categoryRepository.deleteAll();
     }
 
     @Test
     void editCategory() throws Exception {
-        // Create a test category
-        Category category = categoryService.createCategory("Test Category");
+        Category category = new Category();
+        category.setDescription("Shopping");
+        category = categoryRepository.save(category);
 
-        String updatedDescription = "Updated Test Category";
+        EditCategoryRequest editRequest = new EditCategoryRequest("Updated Shopping");
 
         MvcResult result = mockMvc.perform(
                         put("/categories/{categoryId}", category.getId())
-                                .param("description", updatedDescription))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(editRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Verify that the category was updated
-        CategoryDTO updatedCategory = categoryService.getAllCategories().stream()
-                .filter(c -> c.getId().equals(category.getId()))
-                .findFirst()
-                .orElse(null);
-        assertNotNull(updatedCategory);
-        assertEquals(updatedDescription, updatedCategory.getDescription());
+        Category editedCategory = categoryRepository.findById(category.getId()).orElse(null);
+        assertNotNull(editedCategory);
+        assertEquals("Updated Shopping", editedCategory.getDescription());
 
-        // Clean up: Delete the test category
-        categoryService.deleteCategory(category.getId());
+        categoryRepository.deleteAll();
     }
 
     @Test
     void deleteCategory() throws Exception {
-        // Create a test category
-        Category category = categoryService.createCategory("Test Category");
+        Category category = new Category();
+        category.setDescription("Shopping");
+        category = categoryRepository.save(category);
 
         mockMvc.perform(
-                        delete("/categories/{categoryId}", category.getId()))
+                        delete("/categories/{categoryId}", category.getId())
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        // Verify that the category was deleted
-        CategoryDTO deletedCategory = categoryService.getAllCategories().stream()
-                .filter(c -> c.getId().equals(category.getId()))
-                .findFirst()
-                .orElse(null);
-        assertNull(deletedCategory);
+        assertFalse(categoryRepository.existsById(category.getId()));
     }
 }
 

@@ -19,22 +19,16 @@ public class CategoryService {
         this.repository = repository;
     }
 
-
-    public Category createCategory(String description){
+    public Category createCategory(String description) {
         Category category = new Category();
         category.setDescription(description);
         return repository.save(category);
     }
 
-   /* public List<Category> getAllCategories (){
-        return repository.findAll();
-    }*/
-
-    //NEW
     public List<CategoryDTO> getAllCategories() {
-        List<Category> categoryList = repository.findAll();
+        List<Category> categories = repository.findAll();
 
-        return categoryList.stream().map(category -> {
+        return categories.stream().map(category -> {
             CategoryDTO categoryDTO = new CategoryDTO();
             categoryDTO.setId(category.getId());
             categoryDTO.setDescription(category.getDescription());
@@ -45,6 +39,7 @@ public class CategoryService {
     public void editCategory(Long categoryId, String description) {
         Category category = repository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
+
         category.setDescription(description);
         repository.save(category);
     }
@@ -52,9 +47,9 @@ public class CategoryService {
     public void deleteCategory(Long categoryId) {
         Category category = repository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
+
         repository.delete(category);
     }
-
 }
 
 

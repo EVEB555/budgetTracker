@@ -19,34 +19,19 @@ public class CategoryController {
         this.service = service;
     }
 
-    /*@PostMapping
-    public void createCategory(@RequestParam(name = "description") String description){
-        service.createCategory(description);
-    }*/
-
-    //NEW
     @PostMapping
-    public ResponseEntity<String> createCategory(@RequestParam(name = "description") String description) {
-        service.createCategory(description);
-        return ResponseEntity.ok("Category created successfully");
+    public void addCategory(@RequestBody CreateCategoryRequest request) {
+        service.createCategory(request.getDescription());
     }
 
-   /* @GetMapping
-    public List<Category> getAllCategories(){
-        return service.getAllCategories();
-    }*/
-
-
-    //NEW
     @GetMapping
-    public List<CategoryDTO> getAllCategories(){
+    public List<CategoryDTO> getAllCategories() {
         return service.getAllCategories();
     }
-
 
     @PutMapping("/{categoryId}")
-    public void editCategory(@PathVariable Long categoryId, @RequestParam(name = "description") String description) {
-        service.editCategory(categoryId, description);
+    public void editCategory(@PathVariable Long categoryId, @RequestBody EditCategoryRequest request) {
+        service.editCategory(categoryId, request.getDescription());
     }
 
     @DeleteMapping("/{categoryId}")
